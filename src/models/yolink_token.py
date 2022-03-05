@@ -1,10 +1,8 @@
+import logging
 import requests
 import time
 
-from logger import Logger
-log = Logger.getInstance(name='yolink_utils',
-                         fname='/tmp/yolink_utils.log').getLogger()
-
+log = logging.getLogger()
 EXPIRES_IN_BUFFER = 60 * 10
 
 

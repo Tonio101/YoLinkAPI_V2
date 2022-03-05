@@ -1,16 +1,15 @@
 import argparse
 import json
+import logging
 import os
 import requests
 import sys
 import time
 
-from logging import DEBUG
-from logger import Logger
 from models.yolink_token import YoLinkToken
 
-log = Logger.getInstance(name='yolink_utils',
-                         fname='/tmp/yolink_utils.log').getLogger()
+logging.basicConfig(level=logging.DEBUG)
+log = logging.getLogger()
 
 
 def parse_config_file(fname) -> dict:
@@ -102,18 +101,11 @@ def main(args):
                         required=True)
     parser.add_argument("--devices", help="List managed devices",
                         action='store_true', required=False)
-    parser.add_argument("-d", "--debug", help="Debug",
-                        action='store_true', required=False)
 
     parser.set_defaults(devices=False, debug=False)
 
     args = parser.parse_args()
-
-    if args.debug:
-        log.setLevel(DEBUG)
-
     log.debug("{0}\n".format(args))
-
     config = parse_config_file(args.config)
     log.debug(config)
 
@@ -132,7 +124,7 @@ def main(args):
 
         home_id = get_home_id(apiUrl=config['yoLink']['apiv2']['apiUrl'],
                               access_token=token)
-        log.info(home_id)
+        log.info("Home ID: {}".format(home_id))
 
 
 if __name__ == '__main__':
