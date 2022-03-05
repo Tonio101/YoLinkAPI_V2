@@ -28,6 +28,15 @@ def parse_config_file(fname) -> dict:
 
 
 def get_all_devices(apiUrl: str, access_token: str) -> dict:
+    """_summary_
+
+    Args:
+        apiUrl (str): _description_
+        access_token (str): _description_
+
+    Returns:
+        dict: _description_
+    """
     data = dict()
     headers = dict()
 
@@ -52,6 +61,15 @@ def get_all_devices(apiUrl: str, access_token: str) -> dict:
 
 
 def get_home_id(apiUrl: str, access_token: str) -> str:
+    """_summary_
+
+    Args:
+        apiUrl (str): _description_
+        access_token (str): _description_
+
+    Returns:
+        str: _description_
+    """
     data = dict()
     headers = dict()
 
