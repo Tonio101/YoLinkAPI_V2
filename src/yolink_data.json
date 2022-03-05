@@ -1,0 +1,26 @@
+{
+  "yoLink": {
+    "apiv1": {
+      "apiUrl": "https://api.yosmart.com/openApi",
+      "csId": "",
+      "csSecKey": "",
+      "mqtt": {
+        "url": "api.yosmart.com",
+        "port": 8003,
+        "topic": ""
+      }
+    },
+    "apiv2": {
+      "apiUrl": "https://api.yosmart.com/open/yolink/v2/api",
+      "tokenUrl": "https://api.yosmart.com/open/yolink/token",
+      "uaId": "",
+      "secId": "",
+      "mqtt": {
+        "url": "api.yosmart.com",
+        "port": 8003,
+        "topic": ""
+      }
+    },
+    "deviceInfo": []
+  }
+}
