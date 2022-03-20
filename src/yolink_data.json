@@ -18,9 +18,10 @@
       "mqtt": {
         "url": "api.yosmart.com",
         "port": 8003,
-        "topic": ""
+        "topic": "yl-home/{}/+/report"
       }
     },
+    "yolinkHomeId": "",
     "deviceInfo": []
   }
 }

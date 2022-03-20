@@ -1,19 +1,15 @@
-import logging
 import requests
 import time
 
-log = logging.getLogger()
+from models.logger import Logger
+log = Logger.getInstance().getLogger()
 EXPIRES_IN_BUFFER = 60 * 10
 
 
 class YoLinkToken(object):
     """
     http://doc.yosmart.com/docs/protocol/openAPIV2
-
-    Args:
-        object (_type_): _description_
     """
-
     def __init__(self, url: str, ua_id: str, sec_id: str) -> None:
         self.url = url
         self.ua_id = ua_id
@@ -28,9 +24,10 @@ class YoLinkToken(object):
 
     def renew_token(self) -> str:
         """
+        Renew access token if expired.
 
         Returns:
-            str: _description_
+            str: access_token
         """
 
         if not self.is_token_expired():
@@ -58,9 +55,10 @@ class YoLinkToken(object):
 
     def get_access_token(self) -> str:
         """
+        Get new access token.
 
         Returns:
-            str: _description_
+            str: access_token
         """
         data = {
             'grant_type': 'client_credentials'
@@ -81,6 +79,12 @@ class YoLinkToken(object):
         return self.access_token
 
     def set_yolink_token(self, response) -> None:
+        """
+        Set device token from response.
+
+        Args:
+            response (json blob): Server response JSON blob.
+        """
         self.access_token = response.json()['access_token']
         self.token_type = response.json()['token_type']
         self.expires_in = response.json()['expires_in'] - EXPIRES_IN_BUFFER
@@ -91,6 +95,12 @@ class YoLinkToken(object):
         log.info("Successfully got yolink access_token!")
 
     def is_token_expired(self) -> bool:
+        """
+        Check if token is expired.
+
+        Returns:
+            bool: True or False if token expired.
+        """
         if self.access_token_t is None:
             log.error("Must get a token first!")
             return True
@@ -98,10 +108,11 @@ class YoLinkToken(object):
         return ((time.time() - self.access_token_t) > self.expires_in)
 
     def __str__(self) -> str:
-        """_summary_
+        """
+        To String.
 
         Returns:
-            str: _description_
+            str: String containing token info.
         """
         return ("access_token: {}\n"
                 "expires_in: {}\n"

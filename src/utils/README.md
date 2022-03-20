@@ -1,6 +1,6 @@
 # YoLink Utility Script
 
-## Get Managed Devices
+## Get Managed Devices Info and Home ID
 
 ```bash
 PYTHONPATH=<path_to/YoLinkAPI_V2/src> python3 yolink_utils.py \

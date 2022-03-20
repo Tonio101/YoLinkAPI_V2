@@ -120,7 +120,7 @@ def main(args):
         devices = get_all_devices(apiUrl=config['yoLink']['apiv2']['apiUrl'],
                                   access_token=token)
         for device in devices:
-            log.info(device)
+            log.info("{}".format(json.dumps(device, indent=2)))
 
         home_id = get_home_id(apiUrl=config['yoLink']['apiv2']['apiUrl'],
                               access_token=token)
