@@ -19,6 +19,7 @@ Q_SIZE = 32
 
 def parse_config_file(fname: str) -> dict:
     """
+    Parse Config File.
 
     Args:
         fname (string): yolink_data.json config file.
