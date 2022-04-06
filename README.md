@@ -14,15 +14,32 @@ and copy the list of JSON objects with all the device data<br>
 into yolink_data.json config file.
 
 ```bash
+cd <your_path>/YoLinkAPI_V2/src/utils
 PYTHONPATH=<path_to/YoLinkAPI_V2/src> python3 yolink_utils.py \
     --config YoLinkAPI_V2/src/utils/yolink_data.json --devices
+```
+
+Example of data to copy in the `"deviceInfo": []` (`yolink_data.json`):<br>
+```bash
+"deviceInfo": [
+    {
+        "deviceId": "XXXXXXXXXXXXXXXX",
+        "deviceUDID": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        "name": "Device Name",
+        "token": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        "type": "DoorSensor"
+    },
+    {...},
+    {...},
+    ...
+]
 ```
 
 ## YoLink Devices MQTT
 
 Run the following command to start yolink MQTT subscriber.
 
-
 ```bash
-python3 src/yolinkv2.py --config src/yolink_data.local.json --debug
+cd <your_path>/YoLinkAPI_V2
+python3 src/yolinkv2.py --config src/yolink_data.json --debug
 ```
