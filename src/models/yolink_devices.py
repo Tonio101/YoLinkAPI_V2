@@ -45,6 +45,7 @@ DEVICE_TYPE = {
 EVENT_STATE = {
     "normal": -1,
     "error": -1,
+    "alert": -1,
     "open": DoorEvent.OPEN,
     "closed": DoorEvent.CLOSE,
     "dry": LeakEvent.DRY,
