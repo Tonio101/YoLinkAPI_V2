@@ -1,5 +1,9 @@
 # YoLinkAPI_V2
 
+Simple program to get data from YoLink sensors via APIv2.<br>
+Extend and add whatever you need to do with the sensor data<br>
+in the `process` function of each device type.<br>
+
 ## Install required python packages.
 
 ```bash
