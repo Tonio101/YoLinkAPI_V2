@@ -1,5 +1,6 @@
 import json
 import random
+import sys
 
 from time import sleep
 import paho.mqtt.client as mqtt
@@ -96,3 +97,57 @@ class YoLinkMQTTClient(object):
         self.username = self.yolink_token.renew_token()
         self.connect_to_broker()
         sleep(2)
+
+
+class MQTTClient(object):
+    """
+    Object representation for a MQTT Client
+    """
+
+    def __init__(self, username, password, mqtt_host, mqtt_port):
+        self.host = mqtt_host
+        self.port = mqtt_port
+
+        self.client = mqtt.Client(client_id=__name__, clean_session=True,
+                                  userdata=None, protocol=mqtt.MQTTv311,
+                                  transport="tcp")
+        self.client.username_pw_set(username, password)
+        self.client.on_connect = self.on_connect
+
+    def connect_to_broker(self):
+        """
+        Connect to MQTT broker
+        """
+        log.info("Connecting to broker...")
+        self.client.connect(self.host, self.port, 10)
+        # Spins a thread that will call the loop method at
+        # regualr intervals and handle re-connects.
+        self.client.loop_start()
+
+    def on_connect(self, client, userdata, flags, rc):
+        """
+        Callback for broker connection event
+        """
+        log.info("Connected with result code %s" % rc)
+
+        if (rc == 0):
+            log.info("Successfully connected to broker %s" % self.host)
+        else:
+            log.error("Connection with result code %s" % rc)
+            sys.exit(2)
+
+    def publish(self, topic, data):
+        """
+        Publish events to topic
+        """
+        rc = self.client.publish(str(topic), data)
+        if rc[0] == 0:
+            log.debug("Successfully published event to topic {0}".format(
+                topic
+            ))
+        else:
+            log.error("Failed to publish {0} to topic {1}".format(
+                data, topic
+            ))
+
+        return rc[0]

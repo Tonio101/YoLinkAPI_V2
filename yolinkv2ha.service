@@ -1,0 +1,15 @@
+[Unit]
+Description=YoLinkV2 Home Assistant Service
+After=network.service
+
+[Service]
+ExecStart=/home/antonio/YoLinkAPI_V2/start_yolinkv2homeassistant.sh
+WorkingDirectory=/home/antonio/YoLinkAPI_V2
+StandardOutput=inherit
+StandardError=inherit
+User=antonio
+Restart=on-failure
+RestartSec=60s
+
+[Install]
+WantedBy=multi-user.target

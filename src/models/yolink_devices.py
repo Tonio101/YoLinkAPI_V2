@@ -118,6 +118,16 @@ class YoLinkDevice(object):
     def get_device_data(self):
         return self.event_payload['data']
 
+    def set_mqtt_server(self, mqtt_server):
+        self.topic = "yolink/{0}/{1}/report".format(
+            self.get_raw_type(),
+            self.get_id()
+        )
+        log.debug(self.topic)
+        log.debug(self.get_name())
+
+        self.mqtt_server = mqtt_server
+
     def process(self):
         raise NotImplementedError
 
@@ -163,7 +173,7 @@ class YoLinkDoorDevice(YoLinkDevice):
         log.debug("Process event: {}".format(
             self.get_event()
         ))
-        return 0
+        return self.mqtt_server.publish(self.topic, self.get_event())
 
 
 class YoLinkTempDevice(YoLinkDevice):
@@ -186,6 +196,20 @@ class YoLinkTempDevice(YoLinkDevice):
     def get_humidity(self):
         return round(float(self.get_device_data()['humidity']), 2)
 
+    def set_influxdb_client(self, influxdb_c):
+        self.influxdb_client = influxdb_c
+
+    def influxdb_write_data(self):
+        if not self.influxdb_client:
+            log.debug("InfluxDB client not configured")
+            return -1
+
+        return self.influxdb_client.write_data(
+                    ("temperature={0},humidity={1}").format(
+                        str(self.get_temperature()),
+                        str(self.get_humidity())
+                    ))
+
     def __str__(self):
         to_str = ("Temperature (F): {0}\nHumidity: {1}\n").format(
             self.get_temperature(),
@@ -198,6 +222,9 @@ class YoLinkTempDevice(YoLinkDevice):
             self.get_temperature(),
             self.get_humidity()
         ))
+
+        if self.influxdb_client:
+            return self.influxdb_write_data()
 
         return 0
 

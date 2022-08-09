@@ -1,4 +1,8 @@
 {
+  "features": {
+    "localMQTT": false,
+    "influxDB": false
+  },
   "yoLink": {
     "apiv1": {
       "apiUrl": "https://api.yosmart.com/openApi",
@@ -23,5 +27,30 @@
     },
     "yolinkHomeId": "",
     "deviceInfo": []
+  },
+  "influxdb": {
+    "url": "http://localhost:8086/write",
+    "auth": {
+      "user": "",
+      "pasw": ""
+    },
+    "dbName": "homeassistant",
+    "sensors": [
+      {
+        "type": "temperature_humidity",
+        "deviceId": "",
+        "name": "office",
+        "measurement": "weather",
+        "tagSet": "location=office",
+        "fieldSet": "temperature={},humidity={}"
+      }
+    ],
+    "__comment": "https://docs.influxdata.com/influxdb/v1.8/write_protocols/line_protocol_tutorial"
+  },
+  "mqttProducer": {
+    "user": "",
+    "pasw": "",
+    "host": "localhost",
+    "port": 1883
   }
 }
