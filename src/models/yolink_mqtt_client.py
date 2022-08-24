@@ -1,5 +1,6 @@
 import json
 import random
+import os
 import sys
 
 from time import sleep
@@ -47,7 +48,11 @@ class YoLinkMQTTClient(object):
         """
         Connect to MQTT broker
         """
-        log.info("Connecting to broker...")
+        log.info("[YoLink] Connecting to broker...")
+        log.info("[YoLink] Username: {}, Password: {}".format(
+            self.username,
+            self.passwd
+        ))
         self.client.username_pw_set(username=self.username,
                                     password=self.passwd)
 
@@ -75,12 +80,12 @@ class YoLinkMQTTClient(object):
         """
         Callback for connection to broker.
         """
-        log.info("Connected with result code %s" % rc)
+        log.info("[YoLink] Connected with result code %s" % rc)
 
         if (rc == 0):
-            log.info("Successfully connected to broker %s" % self.mqtt_url)
+            log.info("[YoLink] Successfully connected to broker %s" % self.mqtt_url)
         else:
-            log.error("Connection with result code %s" % rc)
+            log.error("[YoLink] Connection with result code %s" % rc)
             self.restart_mqtt()
 
         self.client.subscribe(self.topic)
@@ -89,12 +94,30 @@ class YoLinkMQTTClient(object):
         """
         Obtain a new refresh token and restart MQTT connection.
         """
+        # TODO: It seems like reconnect does not work
+        #       or is not reliable most of the time.
+        #       In that case, just exit and the service will
+        #       restart.
+        #
+        #       Implement a multi-process/multi-thread to restart
+        #       the child entities for connection errors.
+
+        # Workaround for now
+        # sys.exit(os.EX_NOHOST)
+        # Hacky workaround to restart script when
+        # connection failure is received
+        os.execv(sys.executable, ['python3'] + sys.argv)
         log.info("Attempting to reconnect with fresh token")
         self.client.loop_stop()
         self.client.disconnect()
+        log.info("Disconnected yolink MQTT client")
         sleep(2)
+        log.info("Initializing new yolink MQTT client...")
         self.client = self.get_mqtt_client()
+        log.info("Initialized new yolink MQTT client.")
         self.username = self.yolink_token.renew_token()
+        log.info("Renewed yolink token.")
+        log.info("Reconnecting to YoLink MQTT broker")
         self.connect_to_broker()
         sleep(2)
 
