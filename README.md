@@ -47,3 +47,11 @@ Run the following command to start yolink MQTT subscriber.
 cd <your_path>/YoLinkAPI_V2
 python3 src/yolinkv2.py --config src/yolink_data.json --debug
 ```
+
+## Create Docker Image
+
+Assuming that you already have Docker setup
+
+```bash
+
+```

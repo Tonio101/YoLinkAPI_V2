@@ -4,7 +4,7 @@ from logging.handlers import RotatingFileHandler
 
 FILE = '/tmp/yolinkv2.log'
 FILE_MAXSIZE = 10 * 1024 * 1024  # 10MB
-FILE_BACKUP_CNT = 2
+FILE_BACKUP_CNT = 1
 LOG_FORMAT = '%(asctime)s:%(module)s:%(levelname)s - %(message)s'
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 

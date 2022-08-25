@@ -1,9 +1,7 @@
 import json
 import random
-import os
 import sys
 
-from time import sleep
 import paho.mqtt.client as mqtt
 from models.logger import Logger
 log = Logger.getInstance().getLogger()
@@ -83,7 +81,9 @@ class YoLinkMQTTClient(object):
         log.info("[YoLink] Connected with result code %s" % rc)
 
         if (rc == 0):
-            log.info("[YoLink] Successfully connected to broker %s" % self.mqtt_url)
+            log.info(("[YoLink] Successfully connected to broker {}").format(
+                self.mqtt_url
+            ))
         else:
             log.error("[YoLink] Connection with result code %s" % rc)
             self.restart_mqtt()
@@ -99,7 +99,8 @@ class YoLinkMQTTClient(object):
         #       In that case, just exit and the docker container will
         #       restart the application.
         # Workaround for now
-        sys.exit(os.EX_NOHOST)
+        log.info("Connection lost, restart app")
+        raise SystemExit(1)
 
         # log.info("Attempting to reconnect with fresh token")
         # self.client.loop_stop()
