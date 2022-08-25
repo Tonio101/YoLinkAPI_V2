@@ -96,30 +96,24 @@ class YoLinkMQTTClient(object):
         """
         # TODO: It seems like reconnect does not work
         #       or is not reliable most of the time.
-        #       In that case, just exit and the service will
-        #       restart.
-        #
-        #       Implement a multi-process/multi-thread to restart
-        #       the child entities for connection errors.
-
+        #       In that case, just exit and the docker container will
+        #       restart the application.
         # Workaround for now
-        # sys.exit(os.EX_NOHOST)
-        # Hacky workaround to restart script when
-        # connection failure is received
-        os.execv(sys.executable, ['python3'] + sys.argv)
-        log.info("Attempting to reconnect with fresh token")
-        self.client.loop_stop()
-        self.client.disconnect()
-        log.info("Disconnected yolink MQTT client")
-        sleep(2)
-        log.info("Initializing new yolink MQTT client...")
-        self.client = self.get_mqtt_client()
-        log.info("Initialized new yolink MQTT client.")
-        self.username = self.yolink_token.renew_token()
-        log.info("Renewed yolink token.")
-        log.info("Reconnecting to YoLink MQTT broker")
-        self.connect_to_broker()
-        sleep(2)
+        sys.exit(os.EX_NOHOST)
+
+        # log.info("Attempting to reconnect with fresh token")
+        # self.client.loop_stop()
+        # self.client.disconnect()
+        # log.info("Disconnected yolink MQTT client")
+        # sleep(2)
+        # log.info("Initializing new yolink MQTT client...")
+        # self.client = self.get_mqtt_client()
+        # log.info("Initialized new yolink MQTT client.")
+        # self.username = self.yolink_token.renew_token()
+        # log.info("Renewed yolink token.")
+        # log.info("Reconnecting to YoLink MQTT broker")
+        # self.connect_to_broker()
+        # sleep(2)
 
 
 class MQTTClient(object):
