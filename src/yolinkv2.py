@@ -89,6 +89,7 @@ def main(argv):
                          output_q=output_q,
                          yolink_token=yolink_token)
     yolink_mqtt_server.connect_to_broker()
+    consumer.join()
 
 
 if __name__ == '__main__':

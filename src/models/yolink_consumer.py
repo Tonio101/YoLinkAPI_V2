@@ -15,6 +15,7 @@ class YoLinkConsumer(threading.Thread):
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs=None, verbose=None):
         super(YoLinkConsumer, self).__init__()
+        self.setDaemon(True)
         self.target = target
         self.name = name
         self.output_q = args[0]

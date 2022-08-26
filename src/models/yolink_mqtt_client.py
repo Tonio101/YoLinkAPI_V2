@@ -103,8 +103,8 @@ class YoLinkMQTTClient(object):
         raise SystemExit(1)
 
         # log.info("Attempting to reconnect with fresh token")
-        # self.client.loop_stop()
         # self.client.disconnect()
+        # self.client.loop_stop()
         # log.info("Disconnected yolink MQTT client")
         # sleep(2)
         # log.info("Initializing new yolink MQTT client...")
