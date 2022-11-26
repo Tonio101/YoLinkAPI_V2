@@ -160,7 +160,9 @@ class YoLinkDoorDevice(YoLinkDevice):
         return EVENT_STATE[self.get_device_data()['state']] == DoorEvent.CLOSE
 
     def get_event(self):
-        return str(EVENT_STATE[self.get_device_data()['state']])
+        if 'state' in self.get_device_data():
+            return str(EVENT_STATE[self.get_device_data()['state']])
+        return None
 
     def __str__(self):
         to_str = ("Event: {0} ({1}) \n").format(
@@ -170,10 +172,15 @@ class YoLinkDoorDevice(YoLinkDevice):
         return super().__str__() + to_str
 
     def process(self):
+        event = self.get_event()
         log.debug("Process event: {}".format(
             self.get_event()
         ))
-        return self.mqtt_server.publish(self.topic, self.get_event())
+
+        if event:
+            return self.mqtt_server.publish(self.topic, self.get_event())
+
+        return 0
 
 
 class YoLinkTempDevice(YoLinkDevice):
