@@ -1,7 +1,7 @@
 import requests
 import time
 
-from models.logger import Logger
+from logger import Logger
 log = Logger.getInstance().getLogger()
 EXPIRES_IN_BUFFER = 60 * 10
 

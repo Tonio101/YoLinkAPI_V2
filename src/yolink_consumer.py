@@ -1,7 +1,11 @@
+import json
+import time
+import requests
 import threading
+
 from time import sleep
 
-from models.logger import Logger
+from logger import Logger
 log = Logger.getInstance().getLogger()
 
 
@@ -72,3 +76,61 @@ class YoLinkConsumer(threading.Thread):
             rc = -1
 
         return rc
+
+
+class YoLinkApi(object):
+
+    def __init__(self, api_url: str, access_token):
+        self.api_url = api_url
+        self.access_token = access_token
+
+    def get_home_id(self) -> str:
+        data = dict()
+        headers = dict()
+
+        headers['Content-type'] = 'application/json'
+        headers['Authorization'] = 'Bearer ' + self.access_token
+
+        data['method'] = 'Home.getGeneralInfo'
+        data['time'] = str(int(time.time()*1000))
+
+        r = requests.post(self.api_url,
+                          data=json.dumps(data),
+                          headers=headers)
+
+        if r.status_code != 200:
+            log.error("Failed to get device list")
+            return None
+
+        info = r.json()
+        if ('code' in info and info['code'] != '000000'):
+            log.error("Failed to get device list")
+            return None
+
+        log.info(info)
+        return info['data']['id']
+
+    def get_all_devices(self) -> dict:
+        data = dict()
+        headers = dict()
+
+        headers['Content-type'] = 'application/json'
+        headers['Authorization'] = 'Bearer ' + self.access_token
+
+        data['method'] = 'Home.getDeviceList'
+        data['time'] = str(int(time.time()*1000))
+
+        r = requests.post(self.api_url,
+                          data=json.dumps(data),
+                          headers=headers)
+
+        if r.status_code != 200:
+            log.error("Failed to get device list")
+            return None
+
+        info = r.json()
+
+        if info['data'] and 'devices' in info['data']:
+            return info['data']['devices']
+
+        return None

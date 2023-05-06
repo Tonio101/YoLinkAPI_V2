@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import argparse
 import json
 import logging
@@ -7,15 +6,15 @@ import queue
 import sys
 
 from time import sleep
-from models.yolink_token import YoLinkToken
-from models.yolink_devices import YoLinkFactory
-from models.yolink_consumer import YoLinkConsumer
-from models.influxdb_interface import InfluxDbClient
-from models.yolink_mqtt_client import YoLinkMQTTClient, MQTTClient
-from models.logger import Logger
+from yolink_token import YoLinkToken
+from yolink_devices import YoLinkFactory
+from yolink_consumer import YoLinkConsumer, YoLinkApi
+from influxdb_interface import InfluxDbClient
+from yolink_mqtt_client import YoLinkMqttClient, MqttClient
+from logger import Logger
 log = Logger.getInstance().getLogger()
 
-Q_SIZE = 32
+Q_SIZE = 64
 
 
 def parse_config_file(fname: str) -> dict:
@@ -50,10 +49,7 @@ def configure_influxdb_devices(device_hash, config):
         device_id = sensor['deviceId']
         if device_id in device_hash:
             client = \
-                InfluxDbClient(url=influxdb_info['url'],
-                               auth=(influxdb_info['auth']['user'],
-                                     influxdb_info['auth']['pasw']),
-                               db_name=influxdb_info['dbName'],
+                InfluxDbClient(config=influxdb_info,
                                measurement=sensor['measurement'],
                                tag_set=sensor['tagSet'])
             device_hash[device_id].set_influxdb_client(client)
@@ -69,12 +65,9 @@ def configure_local_mqtt_server(device_hash, config):
         device_hash (map): Device hash map.
         config (map): Config hash map.
     """
-
     mqtt_server = \
-        MQTTClient(username=config['mqttProducer']['user'],
-                   password=config['mqttProducer']['pasw'],
-                   mqtt_host=config['mqttProducer']['host'],
-                   mqtt_port=config['mqttProducer']['port'])
+        MqttClient(config=config['mqttBroker'])
+
     mqtt_server.connect_to_broker()
 
     for deviceid in device_hash:
@@ -97,32 +90,45 @@ def main(argv):
         log.setLevel(logging.DEBUG)
 
     config = parse_config_file(args.config)
-    log.debug(config)
-    yolinkconf = config['yoLink']
+    yolinkv2_config = config['yoLink']['apiv2']
     localMqttEnabled = config['features']['localMQTT']
     influxDbEnabled = config['features']['influxDB']
 
     yolink_token = \
-        YoLinkToken(url=yolinkconf['apiv2']['tokenUrl'],
-                    ua_id=yolinkconf['apiv2']['uaId'],
-                    sec_id=yolinkconf['apiv2']['secId'])
-    acces_token = yolink_token.get_access_token()
-    log.debug(acces_token)
+        YoLinkToken(url=yolinkv2_config['tokenUrl'],
+                    ua_id=yolinkv2_config['uaId'],
+                    sec_id=yolinkv2_config['secId'])
+    access_token = yolink_token.get_access_token()
+    log.debug(access_token)
+
+    yolink_api = \
+        YoLinkApi(api_url=yolinkv2_config['apiUrl'],
+                  access_token=access_token)
+    devices = yolink_api.get_all_devices()
+    home_id = yolink_api.get_home_id()
 
     device_hash = dict()
     yolink_device = None
 
-    for device in yolinkconf['deviceInfo']:
+    for device in devices:
+        device_type = device['type']
+        device_name = device['name']
         log.debug("{} {}".format(
-            device['type'],
-            device['name']
+            device_type,
+            device_name
         ))
-        yolink_device = YoLinkFactory(device['type'], device)
+
+        if (device_type == 'Hub' or device_type == 'Siren'):
+            continue
+
+        yolink_device = YoLinkFactory(device_type, device)
         device_hash[yolink_device.get_id()] = yolink_device
 
     if influxDbEnabled:
+        log.info("Influx DB Enabled")
         configure_influxdb_devices(device_hash, config)
     if localMqttEnabled:
+        log.info("MQTT Broker Enabled")
         configure_local_mqtt_server(device_hash, config)
 
     log.debug(device_hash)
@@ -132,15 +138,15 @@ def main(argv):
     consumer.start()
     sleep(1)
 
-    mqtt_topic = yolinkconf['apiv2']['mqtt']['topic'].format(
-        yolinkconf['yolinkHomeId']
-    )
+    mqtt_topic = \
+        yolinkv2_config['mqtt']['topic'].format(home_id)
+
     yolink_mqtt_server = \
-        YoLinkMQTTClient(username=acces_token,
+        YoLinkMqttClient(username=access_token,
                          passwd=None,
                          topic=mqtt_topic,
-                         mqtt_url=yolinkconf['apiv2']['mqtt']['url'],
-                         mqtt_port=yolinkconf['apiv2']['mqtt']['port'],
+                         mqtt_url=yolinkv2_config['mqtt']['url'],
+                         mqtt_port=yolinkv2_config['mqtt']['port'],
                          device_hash=device_hash,
                          output_q=output_q,
                          yolink_token=yolink_token)

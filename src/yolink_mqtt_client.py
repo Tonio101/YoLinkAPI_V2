@@ -3,11 +3,11 @@ import random
 import sys
 
 import paho.mqtt.client as mqtt
-from models.logger import Logger
+from logger import Logger
 log = Logger.getInstance().getLogger()
 
 
-class YoLinkMQTTClient(object):
+class YoLinkMqttClient(object):
     """
     Object representation for YoLink MQTT Client
     """
@@ -117,19 +117,20 @@ class YoLinkMQTTClient(object):
         # sleep(2)
 
 
-class MQTTClient(object):
+class MqttClient(object):
     """
     Object representation for a MQTT Client
     """
 
-    def __init__(self, username, password, mqtt_host, mqtt_port):
-        self.host = mqtt_host
-        self.port = mqtt_port
+    # def __init__(self, username, password, mqtt_host, mqtt_port):
+    def __init__(self, config):
+        self.host = config['host']
+        self.port = config['port']
 
         self.client = mqtt.Client(client_id=__name__, clean_session=True,
                                   userdata=None, protocol=mqtt.MQTTv311,
                                   transport="tcp")
-        self.client.username_pw_set(username, password)
+        self.client.username_pw_set(config['user'], config['pasw'])
         self.client.on_connect = self.on_connect
 
     def connect_to_broker(self):

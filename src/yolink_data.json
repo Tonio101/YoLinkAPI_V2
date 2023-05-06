@@ -4,16 +4,6 @@
     "influxDB": false
   },
   "yoLink": {
-    "apiv1": {
-      "apiUrl": "https://api.yosmart.com/openApi",
-      "csId": "",
-      "csSecKey": "",
-      "mqtt": {
-        "url": "api.yosmart.com",
-        "port": 8003,
-        "topic": ""
-      }
-    },
     "apiv2": {
       "apiUrl": "https://api.yosmart.com/open/yolink/v2/api",
       "tokenUrl": "https://api.yosmart.com/open/yolink/token",
@@ -24,9 +14,13 @@
         "port": 8003,
         "topic": "yl-home/{}/+/report"
       }
-    },
-    "yolinkHomeId": "",
-    "deviceInfo": []
+    }
+  },
+  "mqttBroker": {
+    "user": "",
+    "pasw": "",
+    "host": "localhost",
+    "port": 1883
   },
   "influxdb": {
     "url": "http://localhost:8086/write",
@@ -38,19 +32,13 @@
     "sensors": [
       {
         "type": "temperature_humidity",
-        "deviceId": "",
-        "name": "office",
+        "deviceId": "d88b4c0100012345",
+        "name": "guest_bedroom",
         "measurement": "weather",
-        "tagSet": "location=office",
+        "tagSet": "location=guest_bedroom",
         "fieldSet": "temperature={},humidity={}"
       }
     ],
     "__comment": "https://docs.influxdata.com/influxdb/v1.8/write_protocols/line_protocol_tutorial"
-  },
-  "mqttProducer": {
-    "user": "",
-    "pasw": "",
-    "host": "localhost",
-    "port": 1883
   }
 }
