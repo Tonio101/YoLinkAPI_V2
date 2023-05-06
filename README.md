@@ -19,7 +19,7 @@ cd <your_path>/YoLinkAPI_V2
 python3 src/main.py --config src/yolink_data.json --debug
 ```
 
-## Create Docker Image
+## Run in Docker Container
 
 Assuming that you already have Docker setup.
 Modify the Dockerfile to match your config file.
@@ -34,7 +34,16 @@ Start docker container
 ./start_docker_container.sh
 ```
 
-## Obtain Managed Device Info and Home ID
+## Systemd Service
+
+```bash
+sudo cp yolinkv2ha.service /etc/systemd/system/
+sudo systemctl enable yolinkv2ha.service
+sudo systemctl start yolinkv2ha.service
+sudo systemctl status yolinkv2ha.service
+```
+
+## (Optional) Obtain Managed Device Info and Home ID
 
 Utility script to obtain all the devices linked
 to your account as well as the home id
