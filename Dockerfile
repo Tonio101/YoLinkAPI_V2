@@ -15,4 +15,4 @@ RUN python3 -m pip install -r requirements.txt
 # Influx DB (Send data to InfluxDB)
 #EXPOSE 8086
 
-CMD ["python3", "./yolinkv2homeassistant.py", "--config", "yolink_data.local.json", "--debug"]
+CMD ["python3", "./main.py", "--config", "yolink_data.local.json", "--debug"]

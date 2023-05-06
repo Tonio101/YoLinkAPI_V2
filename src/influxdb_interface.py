@@ -1,6 +1,6 @@
 import requests
 
-from models.logger import Logger
+from logger import Logger
 log = Logger.getInstance().getLogger()
 
 
@@ -8,7 +8,7 @@ class InfluxDbClient(object):
     """
         Object representation for influx db interface client.
     """
-    def __init__(self, url, auth, db_name, measurement, tag_set):
+    def __init__(self, config, measurement, tag_set):
         """
 
         Args:
@@ -18,11 +18,12 @@ class InfluxDbClient(object):
             measurement ([type]): [description]
             tag_set ([type]): [description]
         """
-        self.url = url
-        self.auth = auth
-        self.db = db_name
+        self.url = config['url']
+        self.auth = (config['auth']['user'],
+                     config['auth']['pasw'])
+        self.db = config['dbName']
         self.params = (
-            ('db', db_name),
+            ('db', config['dbName']),
         )
         self.headers = {'Content-Type': 'application/json'}
         self.measurement = measurement
@@ -41,7 +42,7 @@ class InfluxDbClient(object):
         )
 
     def write_data(self, data):
-        # measurment,tag_set field_set=<val>
+        # measurement,tag_set field_set=<val>
         # Example:
         # weather,location=home temperature=55.5,humidity=70.2
         data = ("{0},{1} {2}").format(

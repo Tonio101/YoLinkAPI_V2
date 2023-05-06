@@ -7,7 +7,7 @@ LOCK_FILE=/tmp/yolinkv2ha.lockfile
 FLOCK_OPTS="-n"
 
 YOLINK_PATH=$HOME/YoLinkAPI_V2/src
-YOLINK_FILE=yolinkv2homeassistant.py
+YOLINK_FILE=main.py
 YOLINK_DFILE=yolink_data.local.json
 
 YOLINK_SCRIPT=$YOLINK_PATH/$YOLINK_FILE

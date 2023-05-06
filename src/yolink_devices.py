@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from enum import Enum
-from models.logger import Logger
+from logger import Logger
 log = Logger.getInstance().getLogger()
 
 
