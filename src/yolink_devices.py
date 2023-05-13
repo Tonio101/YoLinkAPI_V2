@@ -63,7 +63,7 @@ DEVICE_TYPE_TO_STR = {
 
 class YoLinkDevice(object):
     """
-    Object representatiaon for YoLink Device
+    Object representation for YoLink Device
     """
     def __init__(self, device_info):
         self.id = device_info['deviceId']
@@ -148,7 +148,7 @@ class YoLinkDevice(object):
 
 class YoLinkDoorDevice(YoLinkDevice):
     """
-    Object representatiaon for YoLink Door Sensor
+    Object representation for YoLink Door Sensor
     """
     def __init__(self, device_info):
         super().__init__(device_info)
@@ -179,13 +179,17 @@ class YoLinkDoorDevice(YoLinkDevice):
 
         if event:
             return self.mqtt_server.publish(self.topic, self.get_event())
+        else:
+            log.info("Not supported event: {}".format(
+                self.get_device_data()
+            ))
 
         return 0
 
 
 class YoLinkTempDevice(YoLinkDevice):
     """
-    Object representatiaon for YoLink Temperature Sensor
+    Object representation for YoLink Temperature Sensor
     """
     def __init__(self, device_info):
         super().__init__(device_info)

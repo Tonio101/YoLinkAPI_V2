@@ -1,10 +1,10 @@
 [Unit]
-Description=YoLinkV2 Home Assistant Service
+Description=YoLinkV2 Proxu Service
 After=network.service
 
 [Service]
-ExecStart=/home/antonio/YoLinkAPI_V2/start_yolinkv2.sh
-WorkingDirectory=/home/antonio/YoLinkAPI_V2
+ExecStart=<YOUR_PATH>/YoLinkAPI_V2/start_yolinkv2.sh
+WorkingDirectory=<YOUR_PATH>/YoLinkAPI_V2
 StandardOutput=inherit
 StandardError=inherit
 User=antonio

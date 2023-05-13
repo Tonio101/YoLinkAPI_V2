@@ -132,9 +132,9 @@ def main(argv):
         configure_local_mqtt_server(device_hash, config)
 
     log.debug(device_hash)
-    output_q = queue.Queue(maxsize=Q_SIZE)
+    input_q = queue.Queue(maxsize=Q_SIZE)
     consumer = YoLinkConsumer(name='consumer',
-                              args=(output_q, device_hash,))
+                              args=(input_q, device_hash,))
     consumer.start()
     sleep(1)
 
@@ -148,7 +148,7 @@ def main(argv):
                          mqtt_url=yolinkv2_config['mqtt']['url'],
                          mqtt_port=yolinkv2_config['mqtt']['port'],
                          device_hash=device_hash,
-                         output_q=output_q,
+                         input_q=input_q,
                          yolink_token=yolink_token)
     yolink_mqtt_server.connect_to_broker()
 

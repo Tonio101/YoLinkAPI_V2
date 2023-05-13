@@ -13,14 +13,14 @@ class YoLinkMqttClient(object):
     """
     def __init__(self, username: str, passwd: str, topic: str,
                  mqtt_url: str, mqtt_port: str, device_hash: str,
-                 output_q: str, yolink_token: str):
+                 input_q: str, yolink_token: str):
         self.username = username
         self.passwd = passwd
         self.topic = topic
         self.mqtt_url = mqtt_url
         self.mqtt_port = int(mqtt_port)
         self.device_hash = device_hash
-        self.output_q = output_q
+        self.input_q = input_q
         self.yolink_token = yolink_token
         self.client = self.get_mqtt_client()
 
@@ -72,7 +72,7 @@ class YoLinkMqttClient(object):
             msg (json): JSON payload containing MQTT data.
         """
         payload = json.loads(msg.payload.decode("utf-8"))
-        self.output_q.put(payload)
+        self.input_q.put(payload)
 
     def on_connect(self, client, userdata, flags, rc):
         """

@@ -22,7 +22,7 @@ class YoLinkConsumer(threading.Thread):
         self.setDaemon(True)
         self.target = target
         self.name = name
-        self.output_q = args[0]
+        self.input_q = args[0]
         self.device_hash = args[1]
 
     def run(self):
@@ -30,16 +30,16 @@ class YoLinkConsumer(threading.Thread):
         Spin up a thread to dequeue and process device data.
         """
         while True:
-            if not self.output_q.empty():
-                payload = self.output_q.get()
-                log.debug("Pulled from the output_q")
+            if not self.input_q.empty():
+                payload = self.input_q.get()
+                log.debug("Pulled from the input_q")
                 log.debug(payload)
                 rc = self.process_entry(payload)
                 if rc == 0:
                     log.debug(
                         ("Successfully processed entry, number "
                          "of entries in the queue: {0}").format(
-                             self.output_q.qsize()
+                             self.input_q.qsize()
                          ))
                 else:
                     log.error("Failed to process entry {0}".format(

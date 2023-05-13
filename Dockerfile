@@ -1,12 +1,12 @@
 FROM python:3.9.2
 
-RUN mkdir -p /usr/src/app
-COPY ./src /usr/src/app
-COPY requirements.txt /usr/src/app
-WORKDIR /usr/src/app
+RUN mkdir -p /app
+COPY ./src /app
+COPY requirements.txt /app
 
-RUN python3 -m pip install --upgrade pip
-RUN python3 -m pip install -r requirements.txt
+# RUN python3 -m pip install --upgrade pip
+RUN cd /app \
+    && python3 -m pip install -r requirements.txt
 
 # Local MQTT Server (Used by HomeAssistant)
 #EXPOSE 1883
@@ -15,4 +15,5 @@ RUN python3 -m pip install -r requirements.txt
 # Influx DB (Send data to InfluxDB)
 #EXPOSE 8086
 
-CMD ["python3", "./main.py", "--config", "yolink_data.local.json", "--debug"]
+WORKDIR /app
+CMD ["python3", "main.py", "--config", "yolink_config.json", "--debug"]
