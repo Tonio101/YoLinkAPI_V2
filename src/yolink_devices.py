@@ -319,6 +319,10 @@ class YoLinkVibrationDevice(YoLinkDevice):
 
         vibrate_state = self.get_state()
         log.info("{}: {}".format(self, vibrate_state))
+        if self.mqtt_server:
+            ret = \
+                self.mqtt_server.publish(
+                    self.topic, vibrate_state)
         return ret
 
 
