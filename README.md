@@ -12,7 +12,8 @@ python3 -m pip install -r requirements.txt
 
 ## YoLink Devices MQTT
 
-Run the following command to start YoLink MQTT subscriber.
+First ensure that you can run the standalone YoLink script.
+If that succeeds, proceed to docker if you want.
 
 You will need YoLink account secrets:
     - UA ID
@@ -21,8 +22,8 @@ You will need YoLink account secrets:
 Populate the `yolink_config.json` with your credentials.
 
 ```bash
-cd <your_path>/YoLinkAPI_V2
-python3 src/main.py --config src/yolink_config.json --debug
+cd <your_path>/YoLinkAPI_V2/src
+python3 main.py --config yolink_config.json --debug
 ```
 
 ## Run in Docker Container
@@ -56,10 +57,16 @@ sudo systemctl status yolinkv2ha.service
 ## (Optional) Obtain Managed Device Info and Home ID
 
 Utility script to obtain all the devices linked
-to your account as well as the home id
+to your account as well as the home id.
+This step can be completely ignored.
+
+Only if you are interested in seeing what devices
+are linked to your YoLink account.
 
 ```bash
 cd <your_path>/YoLinkAPI_V2/src/utils
-PYTHONPATH=<path_to>/YoLinkAPI_V2/src python3 yolink_utils.py \
-    --config yolink_data.json --devices
+PYTHONPATH=<path_to>/YoLinkAPI_V2/src \
+    python3 yolink_utils.py \
+    --config yolink_config.json \
+    --devices
 ```
