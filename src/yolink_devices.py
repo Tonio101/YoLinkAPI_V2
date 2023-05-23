@@ -298,12 +298,12 @@ class YoLinkVibrationDevice(YoLinkDevice):
     def get_state(self):
         if 'state' in self.get_device_data():
             if self.is_vibrating():
-                return VibrateEvent.VIBRATE
-        return VibrateEvent.NO_VIBRATE
+                return str(VibrateEvent.VIBRATE)
+        return str(VibrateEvent.NO_VIBRATE)
 
     def __str__(self):
         to_str = ("Current State: {0}\n").format(
-            str(self.get_state())
+            self.get_state()
         )
 
         return super().__str__() + to_str
